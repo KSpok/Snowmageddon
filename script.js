@@ -1,8 +1,8 @@
-let animationId;
 const snowboarder = document.querySelector('#snowboarder');
 const background = document.querySelector('#background');
-let lastGenerationY = 0;
 const generationThreshold = 200; // generate every 200px
+let animationId;
+let lastGenerationY = 0;
 let backgroundY = 0;
 let keys = {};
 let position = {
@@ -84,13 +84,15 @@ function moveSnowboarder() {
 moveSnowboarder(); 
 
 function backgroundGenerator() {
-    const randomNumber = Math.floor(Math.random() * 20) + 1;
+    const randomNumber = Math.floor(Math.random() * 100) + 1;
     let newElement = document.createElement('img');
 
     if (randomNumber === 1) {
         newElement.src = 'rock.png';
-    } else if (randomNumber % 2 === 0) {
+    } else if (randomNumber < 50) {
         newElement.src = 'tree.png';
+    } else if (randomNumber > 50) {
+        newElement.src = 'snowpile.PNG'
     } else {
         return; // skip generation this time
     }
@@ -111,6 +113,10 @@ function checkCollision() {
 
     for (const obstacle of obstacles) {
         const obstacleRect = obstacle.getBoundingClientRect();
+        
+        if (obstacle.src.includes('snowpile.PNG')) {
+            continue;
+        }
 
         const isColliding =
             snowboarderRect.left < obstacleRect.right &&
