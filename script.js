@@ -125,6 +125,8 @@ function checkCollision() {
             snowboarderRect.bottom > obstacleRect.top;
 
         if (isColliding) {
+            const crashSound = new Audio('grunt.mp3');  // Replace with your sound file path
+            crashSound.play();
             document.addEventListener('keyup', (e) => {
                 keys[e.key] = false;
                 snowboarder.src = 'crash.png';
