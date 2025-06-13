@@ -1,6 +1,6 @@
 const snowboarder = document.querySelector('#snowboarder');
 const background = document.querySelector('#background');
-const generationThreshold = 200; // generate every 200px
+const generationThreshold = 200; 
 let animationId;
 let lastGenerationY = 0;
 let backgroundY = 0;
@@ -19,7 +19,7 @@ document.addEventListener('keyup', (e) => {
     snowboarder.src = 'FullStop.png';
 });
 
-let snowboarderX = window.innerWidth / 2;  // starting horizontally centered
+let snowboarderX = window.innerWidth / 2;  
 
 function moveSnowboarder() {
     let moved = false;
@@ -92,7 +92,7 @@ function backgroundGenerator() {
     } else if (randomNumber < 50) {
         newElement.src = 'tree.png';
     } else if (randomNumber > 50) {
-        newElement.src = 'snowpile.PNG'
+        newElement.src = 'snowpileBig.PNG'
     } else {
         return; // skip generation this time
     }
@@ -113,10 +113,6 @@ function checkCollision() {
 
     for (const obstacle of obstacles) {
         const obstacleRect = obstacle.getBoundingClientRect();
-        
-        if (obstacle.src.includes('snowpile.PNG')) {
-            continue;
-        }
 
         const isColliding =
             snowboarderRect.left < obstacleRect.right &&
@@ -125,16 +121,22 @@ function checkCollision() {
             snowboarderRect.bottom > obstacleRect.top;
 
         if (isColliding) {
-            const crashSound = new Audio('grunt.mp3');  // Replace with your sound file path
-            crashSound.play();
-            document.addEventListener('keyup', (e) => {
-                keys[e.key] = false;
+            if (obstacle.src.includes('snowpileBig.PNG')) {
+                obstacle.src = 'snowpileSquished.png';
+                return false; 
+
+            } else if (obstacle.src.includes('snowpileSquished.png')){
+                return false;
+
+            } else {
+                const crashSound = new Audio('grunt.mp3');
+                crashSound.play();
                 snowboarder.src = 'crash.png';
-            });
-            snowboarder.src = 'crash.png';
-            cancelAnimationFrame(animationId); // optional: stop movement
-            return true;
+                cancelAnimationFrame(animationId);
+                return true;
+            }
         }
     }
+
     return false;
 }
