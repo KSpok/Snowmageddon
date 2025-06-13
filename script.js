@@ -1,5 +1,6 @@
 const snowboarder = document.querySelector('#snowboarder');
 const background = document.querySelector('#background');
+const characterFace = document.querySelector('#faceIcon');
 const generationThreshold = 200; 
 let animationId;
 let lastGenerationY = 0;
@@ -60,12 +61,11 @@ function moveSnowboarder() {
         moved = true;
     }
 
-    // Update horizontal position of snowboarder
-    // Clamp so he doesn't go off-screen
+    
     snowboarderX = Math.min(window.innerWidth - snowboarder.width / 2, Math.max(0, snowboarderX));
     snowboarder.style.left = snowboarderX + 'px';
 
-    // Background generation, animation frame, etc (keep as before)
+    
     if (Math.abs(backgroundY - lastGenerationY) > generationThreshold) {
         backgroundGenerator();
         lastGenerationY = backgroundY;
@@ -94,15 +94,15 @@ function backgroundGenerator() {
     } else if (randomNumber > 50) {
         newElement.src = 'snowpileBig.PNG'
     } else {
-        return; // skip generation this time
+        return;
     }
 
     newElement.classList.add('background-item');
 
-    // Random horizontal position
+    
     newElement.style.position = 'absolute';
     newElement.style.left = Math.floor(Math.random() * window.innerWidth) + 'px';
-    newElement.style.top = (Math.abs(backgroundY) + window.innerHeight) + 'px'; // place below current view
+    newElement.style.top = (Math.abs(backgroundY) + window.innerHeight) + 'px'; 
 
     background.appendChild(newElement);
 }
@@ -119,23 +119,35 @@ function checkCollision() {
             snowboarderRect.right > obstacleRect.left &&
             snowboarderRect.top < obstacleRect.bottom &&
             snowboarderRect.bottom > obstacleRect.top;
-
+            
         if (isColliding) {
             if (obstacle.src.includes('snowpileBig.PNG')) {
                 obstacle.src = 'snowpileSquished.png';
+                characterFace.src = 'faceSmiling.png'
+                setTimeout(function() {
+                characterFace.src = 'faceNormal.png'
+                }, 1000);
                 return false; 
 
             } else if (obstacle.src.includes('snowpileSquished.png')){
                 return false;
 
             } else {
+                document.addEventListener('keyup', (e) => {
+                    keys[e.key] = false;
+                    snowboarder.src = 'crash.png';
+                    characterFace.src = 'faceBloody.png'
+                })
                 const crashSound = new Audio('grunt.mp3');
                 crashSound.play();
+                characterFace.src = 'faceBloody.png'
                 snowboarder.src = 'crash.png';
                 cancelAnimationFrame(animationId);
                 return true;
             }
+            
         }
+
     }
 
     return false;

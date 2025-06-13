@@ -1,7 +1,7 @@
 .snowboarder {
   position: fixed;
   top: 40vh;
-  left: 50vw; /* initial position */
+  left: 50vw; 
   transform: translateX(-50%);
   z-index: 10;
   width: 45px;
@@ -19,4 +19,23 @@
     width: 90px;
     height: auto;
     z-index: 1;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%); 
+  height: 200px;
+  width: 200px;
+  background-color: #333;
+  text-align: center;
+  z-index: 1000;
+  border-radius: 100%;
+}
+
+.faceIcon {
+  width: 200px;
+  height: 200px;
+  object-fit: cover; 
 }
